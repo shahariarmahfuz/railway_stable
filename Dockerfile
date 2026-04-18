@@ -210,8 +210,12 @@ function cmds() {
     pcmd "gs, ga, gc" "Git Status, Add, Commit"
     pcmd "addcmd" "Create a personal custom shortcut!"
     pcmd "delcmd" "Delete a personal custom shortcut!"
-    pcmd "dcodex" "Auto-install Node.js & run OpenAI Codex 🌟"
+    pcmd "sv" "Activate Virtual Env (venv/.venv/env) 🌟"
+    pcmd "dcodex" "Auto-install Node.js & run Codex 🌟"
     pcmd "dpy" "Auto-install Python, Pip & Virtualenv 🌟"
+    pcmd "dgo" "Auto-install Golang 🌟"
+    pcmd "djava" "Auto-install Java 17 LTS 🌟"
+    pcmd "dbot" "Download Python Telegram Bot Template 🌟"
     
     # Custom Shortcuts Section
     echo -e "\n\e[1;35m👤 My Personal Shortcuts\e[0m"
@@ -248,8 +252,16 @@ function ex() {
 }
 
 # ==========================================
-# 🌟 NEW DEV SHORTCUTS (dcodex & dpy)
+# 🌟 NEW DEV SHORTCUTS & INSTALLERS
 # ==========================================
+
+function sv() {
+    if [ -f "venv/bin/activate" ]; then source venv/bin/activate; echo -e "\e[1;32m✔ venv activated!\e[0m";
+    elif [ -f ".venv/bin/activate" ]; then source .venv/bin/activate; echo -e "\e[1;32m✔ .venv activated!\e[0m";
+    elif [ -f "env/bin/activate" ]; then source env/bin/activate; echo -e "\e[1;32m✔ env activated!\e[0m";
+    else echo -e "\e[1;31m✘ No virtual environment (venv, .venv, env) found in this directory!\e[0m\n\e[1;33mℹ Run 'dpy' if you need to install python-venv.\e[0m"; fi
+}
+
 function dcodex() {
     export NVM_DIR="$HOME/.nvm"
     if [ ! -d "$NVM_DIR" ]; then
@@ -283,6 +295,40 @@ function dpy() {
     echo -e "\e[1;32m✔ Python environment is ready!\e[0m"
     echo -e "\e[1;36mPython Version:\e[0m $(python3 --version 2>&1)"
     echo -e "\e[1;36mPip Version:\e[0m $(pip3 --version 2>&1)"
+}
+
+function dgo() {
+    echo -e "\n\e[1;36m🐹 Installing Golang...\e[0m"
+    sudo apt update && sudo apt install -y golang
+    echo -e "\e[1;32m✔ Go installed successfully!\e[0m"
+    go version
+}
+
+function djava() {
+    echo -e "\n\e[1;36m☕ Installing Java 17 LTS...\e[0m"
+    sudo apt update && sudo apt install -y openjdk-17-jdk openjdk-17-jre
+    echo -e "\e[1;32m✔ Java installed successfully!\e[0m"
+    java -version
+}
+
+function dbot() {
+    echo -e "\n\e[1;36m🤖 Downloading Telegram Bot Template...\e[0m"
+    mkdir -p telegram_bot && cd telegram_bot
+    cat > bot.py << 'PY'
+import telebot
+
+TOKEN = "YOUR_BOT_TOKEN_HERE"
+bot = telebot.TeleBot(TOKEN)
+
+@bot.message_handler(commands=['start', 'help'])
+def send_welcome(message):
+    bot.reply_to(message, "Hello! I am alive on Phoenix Server 🔥")
+
+print("Bot is running...")
+bot.infinity_polling()
+PY
+    echo -e "\e[1;32m✔ Template created in 'telegram_bot/bot.py'!\e[0m"
+    echo -e "\e[1;33mℹ Run 'pip install pyTelegramBotAPI' to install the required library.\e[0m"
 }
 
 # ==========================================
