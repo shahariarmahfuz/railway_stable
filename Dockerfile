@@ -98,6 +98,11 @@ alias api='curl -s'
 # আবহাওয়া ঢাকার জন্য সেট করা হয়েছে
 alias weather='curl -s wttr.in/Dhaka?0'
 
+# 🌟 NEW: Python Venv Shortcuts
+alias mkv='python3 -m venv .venv && echo -e "\e[1;32m✔ .venv created successfully!\e[0m"'
+alias onv='source .venv/bin/activate 2>/dev/null || echo -e "\e[1;31m✘ .venv not found! Run mkv first.\e[0m"'
+alias offv='deactivate 2>/dev/null || echo -e "\e[1;33mℹ No active virtual environment to deactivate.\e[0m"'
+
 # Apps Management
 alias apps='echo -e "\n\e[1;36m▶ Node/Python Apps:\e[0m"; ps -eo pid,user,%cpu,%mem,command | grep -E "[n]ode|[p]ython" || echo -e "\e[90mNone\e[0m"'
 alias kn='sudo pkill -f node 2>/dev/null; echo -e "\e[1;32m✔ All Node apps stopped.\e[0m"'
@@ -210,12 +215,14 @@ function cmds() {
     pcmd "gs, ga, gc" "Git Status, Add, Commit"
     pcmd "addcmd" "Create a personal custom shortcut!"
     pcmd "delcmd" "Delete a personal custom shortcut!"
-    pcmd "sv" "Activate Virtual Env (venv/.venv/env) 🌟"
+    pcmd "mkv" "Create new .venv (python3 -m venv) 🌟"
+    pcmd "onv" "Activate .venv (source .venv/bin/...) 🌟"
+    pcmd "offv" "Deactivate current virtual env 🌟"
+    pcmd "sv" "Smart Activate Virtual Env (venv/.venv/env) 🌟"
     pcmd "dcodex" "Auto-install Node.js & run Codex 🌟"
     pcmd "dpy" "Auto-install Python, Pip & Virtualenv 🌟"
     pcmd "dgo" "Auto-install Golang 🌟"
     pcmd "djava" "Auto-install Java 17 LTS 🌟"
-    pcmd "dbot" "Download Python Telegram Bot Template 🌟"
     
     # Custom Shortcuts Section
     echo -e "\n\e[1;35m👤 My Personal Shortcuts\e[0m"
@@ -259,7 +266,7 @@ function sv() {
     if [ -f "venv/bin/activate" ]; then source venv/bin/activate; echo -e "\e[1;32m✔ venv activated!\e[0m";
     elif [ -f ".venv/bin/activate" ]; then source .venv/bin/activate; echo -e "\e[1;32m✔ .venv activated!\e[0m";
     elif [ -f "env/bin/activate" ]; then source env/bin/activate; echo -e "\e[1;32m✔ env activated!\e[0m";
-    else echo -e "\e[1;31m✘ No virtual environment (venv, .venv, env) found in this directory!\e[0m\n\e[1;33mℹ Run 'dpy' if you need to install python-venv.\e[0m"; fi
+    else echo -e "\e[1;31m✘ No virtual environment (venv, .venv, env) found in this directory!\e[0m\n\e[1;33mℹ Run 'mkv' to create one.\e[0m"; fi
 }
 
 function dcodex() {
@@ -309,26 +316,6 @@ function djava() {
     sudo apt update && sudo apt install -y openjdk-17-jdk openjdk-17-jre
     echo -e "\e[1;32m✔ Java installed successfully!\e[0m"
     java -version
-}
-
-function dbot() {
-    echo -e "\n\e[1;36m🤖 Downloading Telegram Bot Template...\e[0m"
-    mkdir -p telegram_bot && cd telegram_bot
-    cat > bot.py << 'PY'
-import telebot
-
-TOKEN = "YOUR_BOT_TOKEN_HERE"
-bot = telebot.TeleBot(TOKEN)
-
-@bot.message_handler(commands=['start', 'help'])
-def send_welcome(message):
-    bot.reply_to(message, "Hello! I am alive on Phoenix Server 🔥")
-
-print("Bot is running...")
-bot.infinity_polling()
-PY
-    echo -e "\e[1;32m✔ Template created in 'telegram_bot/bot.py'!\e[0m"
-    echo -e "\e[1;33mℹ Run 'pip install pyTelegramBotAPI' to install the required library.\e[0m"
 }
 
 # ==========================================
